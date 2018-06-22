@@ -41,7 +41,6 @@ public class JcoDeliveryService implements DeliveryService {
 //    @DeliveryLogger
 //    @Inject
 //    private Logger logger;
-    
     private static final Logger logger = Logger.getLogger(JcoDeliveryService.class.getName());
 
     @Inject
@@ -183,6 +182,7 @@ public class JcoDeliveryService implements DeliveryService {
             delivery.setNetValue(Double.parseDouble(deliveryList.getString("NETWR")));
             delivery.setUom(deliveryList.getString("VRKME"));
             delivery.setCrudeName(deliveryList.getString("ARKTX"));
+            delivery.setUnitPrice(Double.parseDouble(deliveryList.getString("KBETR")));
             try {
                 delivery.setBlDate(sdf.parse(deliveryList.getString("FBUDA")));
             } catch (ParseException ex) {

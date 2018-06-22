@@ -34,7 +34,7 @@ public class DeliveryResource {
     @Inject
     private DeliveryService deliveryService;
 
-    @Fallback(fallbackMethod = "fallbackDelivery")
+    //@Fallback(fallbackMethod = "fallbackDelivery")
     @GET
     public Response delivery(@QueryParam("bldate") String blDate,
             @QueryParam("vessel") String vesselId, @QueryParam("customer") String customerId) throws JCoException, ParseException {
