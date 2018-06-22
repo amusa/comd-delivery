@@ -7,6 +7,7 @@ package com.comd.delivery.api.infrastructure.jco;
 
 import com.comd.delivery.api.services.DeliveryService;
 import com.comd.delivery.lib.v1.Delivery;
+import com.comd.delivery.api.services.exceptions.EmptyPayloadException;
 import com.sap.conn.jco.AbapException;
 import com.sap.conn.jco.JCoDestination;
 import com.sap.conn.jco.JCoDestinationManager;
@@ -17,13 +18,18 @@ import com.sap.conn.jco.ext.DestinationDataProvider;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import com.comd.delivery.api.util.DeliveryLogger;
 
 /**
  *
@@ -31,6 +37,12 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
  */
 @ApplicationScoped
 public class JcoDeliveryService implements DeliveryService {
+
+//    @DeliveryLogger
+//    @Inject
+//    private Logger logger;
+    
+    private static final Logger logger = Logger.getLogger(JcoDeliveryService.class.getName());
 
     @Inject
     @ConfigProperty(name = "SAP_RFC_DESTINATION")
@@ -80,6 +92,7 @@ public class JcoDeliveryService implements DeliveryService {
         connectProperties.setProperty(DestinationDataProvider.JCO_POOL_CAPACITY, jcoPoolCapacity);
         connectProperties.setProperty(DestinationDataProvider.JCO_PEAK_LIMIT, jcoPeakLimit);
         createDestinationDataFile(sapRfcDestination, connectProperties);
+        logger.info("Jco service initialized...");
     }
 
     private void createDestinationDataFile(String destinationName, Properties connectProperties) {
@@ -90,6 +103,7 @@ public class JcoDeliveryService implements DeliveryService {
             connectProperties.store(fos, "SAP jco destination config");
             fos.close();
         } catch (IOException e) {
+            logger.warning("Unable to create the destination files");
             throw new RuntimeException("Unable to create the destination files", e);
         }
     }
@@ -99,63 +113,84 @@ public class JcoDeliveryService implements DeliveryService {
         List<Delivery> deliveries = new ArrayList<>();
 
         JCoDestination destination = JCoDestinationManager.getDestination(sapRfcDestination);
-        JCoFunction function = destination.getRepository().getFunction("BAPI_DELIVERY_GETLIST");
+        JCoFunction function = destination.getRepository().getFunction("ZDELIVERY_GETLIST");
         if (function == null) {
-            throw new RuntimeException("BAPI_DELIVERY_GETLIST not found in SAP.");
+            logger.log(Level.SEVERE, "ZDELIVERY_GETLIST not found in SAP.");
+            throw new RuntimeException("ZDELIVERY_GETLIST not found in SAP.");
         }
 
-        if (customerId != null) {
-            new JCoTableSelectOption(function, "IT_KUNNR")
-                    .withField("CUSTOMER_VENDOR_LOW")
-                    .withValue(customerId)
-                    .withSign("I")
-                    .withOption("EQ")
-                    .build();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        function.getImportParameterList().setValue("KUNAG", customerId);
+        try {
+            function.getImportParameterList().setValue("FBUDA", sdf.parse(blDate));
+        } catch (ParseException ex) {
+            logger.log(Level.SEVERE, null, ex);
         }
 
-        if (blDate != null) {
-            new JCoTableSelectOption(function, "IT_WADAT")
-                    .withField("CGI_DATE_LOW")
-                    .withValue(blDate)
-                    .withSign("I")
-                    .withOption("EQ")
-                    .build();
-        }
-
+//        if (customerId != null) {
+//            new JCoTableSelectOption(function, "IT_KUNNR")
+//                    .withField("CUSTOMER_VENDOR_LOW")
+//                    .withValue(customerId)
+//                    .withSign("I")
+//                    .withOption("EQ")
+//                    .build();
+//        }
+//
+//        if (blDate != null) {
+//            new JCoTableSelectOption(function, "IT_WADAT")
+//                    .withField("CGI_DATE_LOW")
+//                    .withValue(blDate)
+//                    .withSign("I")
+//                    .withOption("EQ")
+//                    .build();
+//        }
         try {
             function.execute(destination);
         } catch (AbapException e) {
-            System.out.println(e.toString());
+            logger.log(Level.SEVERE, null, e);
             return null; //TODO:fix
         }
 
-        JCoTable returnTable = function.getTableParameterList().getTable("RETURN");
+//        JCoTable returnTable = function.getTableParameterList().getTable("RETURN");
+//
+//        for (int i = 0; i < returnTable.getNumRows(); i++) {
+//            if (!(returnTable.getString("TYPE").equals("") || returnTable.getString("TYPE").equals("S"))) {
+//                throw new RuntimeException(returnTable.getString("MESSAGE"));
+//            }
+//        }
+        JCoTable deliveryList = function.getChangingParameterList().getTable("IT_DELIVERY");
 
-        for (int i = 0; i < returnTable.getNumRows(); i++) {
-            if (!(returnTable.getString("TYPE").equals("") || returnTable.getString("TYPE").equals("S"))) {
-                throw new RuntimeException(returnTable.getString("MESSAGE"));
-            }
+        if (deliveryList.isEmpty()) {
+            logger.log(Level.WARNING, "No data returned from server");
+            throw new EmptyPayloadException("No data returned from server");
         }
 
-        JCoTable codes = function.getTableParameterList().getTable("ET_DELIVERY_HEADER");
+        for (int i = 0; i < deliveryList.getNumRows(); i++, deliveryList.nextRow()) {
+            logger.log(Level.INFO, deliveryList.getString("VBELN") + '\t'
+                    + deliveryList.getString("KUNAG") + '\t'
+                    + deliveryList.getString("ZZVESSEL") + '\t'
+                    + deliveryList.getString("FKIMG") + '\t'
+                    + deliveryList.getString("NETWR") + '\t'
+                    + deliveryList.getString("FBUDA") + '\t'
+                    + deliveryList.getString("ARKTX"));
 
-        for (int i = 0; i < codes.getNumRows(); i++, codes.nextRow()) {
             Delivery delivery = new Delivery();
-            delivery.setVbeln(codes.getString("VBELN"));
-            delivery.setInc02(codes.getString("INCO2"));
-            delivery.setKunnr(codes.getString("KUNNR"));
-            delivery.setWadat_ist(codes.getString("WADAT_IST"));
-            delivery.setWaerk(codes.getString("WAERK"));
-            delivery.setNetwr(codes.getString("NETWR"));
+            delivery.setInvoiceNumber(deliveryList.getString("VBELN"));
+            delivery.setCustomer(deliveryList.getString("KUNAG"));
+            delivery.setVesselName(deliveryList.getString("ZZVESSEL"));
+            delivery.setLcNum(deliveryList.getString("LCNUM"));
+            delivery.setQuantity(Double.parseDouble(deliveryList.getString("FKIMG")));
+            delivery.setNetValue(Double.parseDouble(deliveryList.getString("NETWR")));
+            delivery.setUom(deliveryList.getString("VRKME"));
+            delivery.setCrudeName(deliveryList.getString("ARKTX"));
+            try {
+                delivery.setBlDate(sdf.parse(deliveryList.getString("FBUDA")));
+            } catch (ParseException ex) {
+                logger.log(Level.SEVERE, null, ex);
+            }
+            delivery.setOrderReason(deliveryList.getString("AUGRU_AUFT"));
 
             deliveries.add(delivery);
-
-            System.out.println(codes.getString("VBELN") + '\t'
-                    + codes.getString("INCO2") + '\t'
-                    + codes.getString("KUNNR") + '\t'
-                    + codes.getString("WADAT_IST") + '\t'
-                    + codes.getString("WAERK") + '\t'
-                    + codes.getString("NETWR"));
         }//for
 
         return deliveries;

@@ -12,9 +12,16 @@ import java.util.List;
  *
  * @author maliska
  */
-public class DeliveryList {
+public class DeliveryResponse {
 
     private List<Delivery> deliveries;
+
+    public DeliveryResponse() {
+    }
+
+    public DeliveryResponse(List<Delivery> deliveries) {
+        this.deliveries = deliveries;
+    }
 
     public List<Delivery> getDeliveries() {
         return deliveries;

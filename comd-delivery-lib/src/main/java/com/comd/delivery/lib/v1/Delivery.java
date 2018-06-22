@@ -5,67 +5,160 @@
  */
 package com.comd.delivery.lib.v1;
 
+import java.util.Date;
+
 /**
  *
  * @author maliska
  */
 public class Delivery {
 
-    private String vbeln;
-    private String wadat_ist;
-    private String inc02;
-    private String kunnr;
-    private String waerk;
-    private String netwr;
+    private String orderReason;
+    private String customer;
+    private Date blDate;
+    private Date dueDate;
+    private String crudeName;
+    private String producer;
+    private String vesselName;
+    private String invoiceNumber;
+    private String lcNum;
+    private double quantity;
+    private String uom;
+    private double unitPrice;
+    private double netValue;
+    private double budgetUnitPrice;
+    private double exchangeRateToNaira;
+    private String remark;
 
-    public String getVbeln() {
-        return vbeln;
+    public Delivery() {
     }
 
-    public void setVbeln(String vbeln) {
-        this.vbeln = vbeln;
+    public String getOrderReason() {
+        return orderReason;
     }
 
-    public String getWadat_ist() {
-        return wadat_ist;
+    public void setOrderReason(String orderReason) {
+        this.orderReason = orderReason;
     }
 
-    public void setWadat_ist(String wadat_ist) {
-        this.wadat_ist = wadat_ist;
+    public String getCustomer() {
+        return customer;
     }
 
-   
-
-    public String getInc02() {
-        return inc02;
+    public void setCustomer(String customer) {
+        this.customer = customer;
     }
 
-    public void setInc02(String inc02) {
-        this.inc02 = inc02;
+    public Date getBlDate() {
+        return blDate;
     }
 
-    public String getKunnr() {
-        return kunnr;
+    public void setBlDate(Date blDate) {
+        this.blDate = blDate;
     }
 
-    public void setKunnr(String kunnr) {
-        this.kunnr = kunnr;
+    public String getCrudeName() {
+        return crudeName;
     }
 
-    public String getWaerk() {
-        return waerk;
+    public void setCrudeName(String crudeName) {
+        this.crudeName = crudeName;
     }
 
-    public void setWaerk(String waerk) {
-        this.waerk = waerk;
+    public String getProducer() {
+        return producer;
     }
 
-    public String getNetwr() {
-        return netwr;
+    public void setProducer(String producer) {
+        this.producer = producer;
     }
 
-    public void setNetwr(String netwr) {
-        this.netwr = netwr;
+    public String getVesselName() {
+        return vesselName;
+    }
+
+    public void setVesselName(String vesselName) {
+        this.vesselName = vesselName;
+    }
+
+    public String getInvoiceNumber() {
+        return invoiceNumber;
+    }
+
+    public void setInvoiceNumber(String invoiceNumber) {
+        this.invoiceNumber = invoiceNumber;
+    }
+
+    public double getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(double quantity) {
+        this.quantity = quantity;
+    }
+
+    public double getUnitPrice() {
+        return unitPrice;
+    }
+
+    public void setUnitPrice(double unitPrice) {
+        this.unitPrice = unitPrice;
+    }
+
+    public double getBudgetUnitPrice() {
+        return budgetUnitPrice;
+    }
+
+    public void setBudgetUnitPrice(double budgetUnitPrice) {
+        this.budgetUnitPrice = budgetUnitPrice;
+    }
+
+    public double getExchangeRateToNaira() {
+        return exchangeRateToNaira;
+    }
+
+    public void setExchangeRateToNaira(double exchangeRateToNaira) {
+        this.exchangeRateToNaira = exchangeRateToNaira;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public Date getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(Date dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    public String getLcNum() {
+        return lcNum;
+    }
+
+    public void setLcNum(String lcNum) {
+        this.lcNum = lcNum;
+    }
+
+    public String getUom() {
+        return uom;
+    }
+
+    public void setUom(String uom) {
+        this.uom = uom;
+    }
+
+    public double getNetValue() {
+        return netValue;
+    }
+
+    public void setNetValue(double netValue) {
+        this.netValue = netValue;
     }
 
 }

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     
@@ -11,6 +11,11 @@
     <artifactId>comd-delivery-api</artifactId>
     <packaging>war</packaging>
     <name>comd-delivery-api</name>
+    
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
                 
     <dependencies> 
         <dependency>
@@ -26,48 +31,44 @@
                     <groupId>fish.payara.extras</groupId>
                     <artifactId>payara-embedded-web</artifactId>
         -->        
-    <!--</dependency>-->
-<!--    <dependency>
+        <!--</dependency>-->
+        <!--    <dependency>
         <groupId>org.wildfly.swarm</groupId>
         <artifactId>monitor</artifactId>
     </dependency>
         -->        
-    <!--        <dependency>
-        <groupId>org.wildfly.swarm</groupId>
-        <artifactId>jaxrs-cdi</artifactId>
-    </dependency>-->
-    <dependency>
-        <groupId>org.wildfly.swarm</groupId>
-        <artifactId>microprofile</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>org.apache.deltaspike.core</groupId>
-        <artifactId>deltaspike-core-api</artifactId>           
-    </dependency>
-    <dependency>
-        <groupId>org.apache.deltaspike.core</groupId>
-        <artifactId>deltaspike-core-impl</artifactId>          
-    </dependency>
-    <dependency>
-        <groupId>com.auth0</groupId>
-        <artifactId>java-jwt</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>com.fasterxml.jackson.jaxrs</groupId>
-        <artifactId>jackson-jaxrs-json-provider</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>com.h2database</groupId>
-        <artifactId>h2</artifactId>
-    </dependency>        
-    <dependency>
-        <groupId>com.sap</groupId>
-        <artifactId>sapjco3</artifactId>
-        <version>3.0</version>
-        <!--<scope>runtime</scope>-->
-        <!--<systemPath>${project.basedir}/src/main/resources/yourJar.jar</systemPath>-->
-        <!--<systemPath>e:/lib/sapjco3/sapjco3.jar</systemPath>-->
-    </dependency>        
+        <!--        <dependency>
+            <groupId>org.wildfly.swarm</groupId>
+            <artifactId>jaxrs-cdi</artifactId>
+        </dependency>-->
+        <dependency>
+            <groupId>org.wildfly.swarm</groupId>
+            <artifactId>microprofile</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.deltaspike.core</groupId>
+            <artifactId>deltaspike-core-api</artifactId>           
+        </dependency>
+        <dependency>
+            <groupId>org.apache.deltaspike.core</groupId>
+            <artifactId>deltaspike-core-impl</artifactId>          
+        </dependency>
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.jaxrs</groupId>
+            <artifactId>jackson-jaxrs-json-provider</artifactId>
+        </dependency>               
+        <dependency>
+            <groupId>com.sap</groupId>
+            <artifactId>sapjco3</artifactId>
+            <version>3.0</version>
+            <!--<scope>runtime</scope>-->
+            <!--<systemPath>${project.basedir}/src/main/resources/yourJar.jar</systemPath>-->
+            <!--<systemPath>e:/lib/sapjco3/sapjco3.jar</systemPath>-->
+        </dependency>        
     </dependencies>
 
     <build>
@@ -86,7 +87,7 @@
                 </executions>
                 <configuration>
                     <properties>
-                        <swarm.port.offset>1</swarm.port.offset>
+                        <swarm.port.offset>10</swarm.port.offset>
                         <swarm.context.path>/comd-delivery-api</swarm.context.path>
                     </properties>
                 </configuration>
@@ -99,10 +100,21 @@
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
             </plugin>
+            <!--            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>fabric8-maven-plugin</artifactId>
+                <version>3.5.39</version>
+                <executions>
+                    <execution>
+                        <id>fmp</id>
+                        <goals>
+                            <goal>resource</goal>
+                            <goal>helm</goal>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>-->
         </plugins>
-    </build>
-    <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
+    </build>    
 </project>
