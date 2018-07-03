@@ -3,3 +3,4 @@
 */target/
 nb-configuration.xml
 *.trc
+comd-delivery-api/src/main/resources/META-INF/microprofile-config.properties
