@@ -16,8 +16,8 @@
 
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <version.wildfly-swarm>2018.5.0</version.wildfly-swarm>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>        
+        <version.thorntail>2.0.0.Final</version.thorntail>
         <payara-micro.version>4.1.2.173</payara-micro.version>
         <javaee.version>7.0</javaee.version>
         <jwt.version>3.2.0</jwt.version>
@@ -33,13 +33,13 @@
                 <scope>provided</scope>
             </dependency>
             <dependency>
-                <groupId>org.wildfly.swarm</groupId>
+                <groupId>io.thorntail</groupId>
                 <artifactId>bom-all</artifactId>
-                <version>${version.wildfly-swarm}</version>
-                <type>pom</type>
+                <version>${version.thorntail}</version>
                 <scope>import</scope>
+                <type>pom</type>
             </dependency>
-            <dependency>
+<!--            <dependency>
                 <groupId>org.apache.deltaspike.core</groupId>
                 <artifactId>deltaspike-core-api</artifactId>
                 <version>1.5.3</version>
@@ -48,14 +48,14 @@
                 <groupId>org.apache.deltaspike.core</groupId>
                 <artifactId>deltaspike-core-impl</artifactId>
                 <version>1.5.3</version>
-            </dependency>
+            </dependency>-->
             <!--            <dependency>
                 <groupId>fish.payara.extras</groupId>
                 <artifactId>payara-embedded-web</artifactId>
                 <version>${payara-micro.version}</version>
                 <scope>provided</scope>
             </dependency>-->
-            <dependency>
+<!--            <dependency>
                 <groupId>com.auth0</groupId>
                 <artifactId>java-jwt</artifactId>
                 <version>${jwt.version}</version>
@@ -64,7 +64,7 @@
                 <groupId>com.fasterxml.jackson.jaxrs</groupId>
                 <artifactId>jackson-jaxrs-json-provider</artifactId>
                 <version>${jackson.version}</version>
-            </dependency>                      
+            </dependency>                      -->
         </dependencies>
     </dependencyManagement>
 </project>

@@ -15,6 +15,7 @@
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <docker.image>maliska/delivery:latest</docker.image>
     </properties>
                 
     <dependencies> 
@@ -26,41 +27,36 @@
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
-        </dependency>
+            <scope>provided</scope>
+        </dependency> 
+<!--        <dependency>
+            <groupId>io.thorntail</groupId>
+            <artifactId>keycloak</artifactId>
+        </dependency>-->
         <!--        <dependency>
-                    <groupId>fish.payara.extras</groupId>
-                    <artifactId>payara-embedded-web</artifactId>
-        -->        
-        <!--</dependency>-->
-        <!--    <dependency>
-        <groupId>org.wildfly.swarm</groupId>
-        <artifactId>monitor</artifactId>
-    </dependency>
-        -->        
-        <!--        <dependency>
-            <groupId>org.wildfly.swarm</groupId>
-            <artifactId>jaxrs-cdi</artifactId>
+            <groupId>io.thorntail</groupId>
+            <artifactId>jaxrs</artifactId>
         </dependency>-->
         <dependency>
-            <groupId>org.wildfly.swarm</groupId>
+            <groupId>io.thorntail</groupId>
             <artifactId>microprofile</artifactId>
         </dependency>
-        <dependency>
+        <!--        <dependency>
             <groupId>org.apache.deltaspike.core</groupId>
             <artifactId>deltaspike-core-api</artifactId>           
-        </dependency>
-        <dependency>
+        </dependency>-->
+        <!--        <dependency>
             <groupId>org.apache.deltaspike.core</groupId>
             <artifactId>deltaspike-core-impl</artifactId>          
-        </dependency>
-        <dependency>
+        </dependency>-->
+        <!--        <dependency>
             <groupId>com.auth0</groupId>
             <artifactId>java-jwt</artifactId>
-        </dependency>
-        <dependency>
+        </dependency>-->
+        <!--        <dependency>
             <groupId>com.fasterxml.jackson.jaxrs</groupId>
             <artifactId>jackson-jaxrs-json-provider</artifactId>
-        </dependency>               
+        </dependency>               -->
         <dependency>
             <groupId>com.sap</groupId>
             <artifactId>sapjco3</artifactId>
@@ -75,9 +71,9 @@
         <finalName>comd-delivery-api</finalName>
         <plugins>
             <plugin>
-                <groupId>org.wildfly.swarm</groupId>
-                <artifactId>wildfly-swarm-plugin</artifactId>
-                <version>${version.wildfly-swarm}</version>
+                <groupId>io.thorntail</groupId>
+                <artifactId>thorntail-maven-plugin</artifactId>
+                <version>${version.thorntail}</version>        
                 <executions>
                     <execution>
                         <goals>
@@ -92,15 +88,7 @@
                     </properties>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>3.1.0</version>
-                <configuration>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
-                </configuration>
-            </plugin>
-                        <plugin>
+            <!--            <plugin>
                 <groupId>io.fabric8</groupId>
                 <artifactId>fabric8-maven-plugin</artifactId>
                 <version>3.5.39</version>
@@ -114,7 +102,73 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
+            <!--            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.26.0</version>                
+                <configuration>
+                    <images>
+                        <image>
+                            <name>${docker.image}</name>
+                            <build>
+                                <from>java:8</from>
+                                <maintainer>mayemij@gmail.com</maintainer>
+                                <ports>
+                                    <port>8090</port>
+                                </ports>
+                                <assembly>
+                                    <inline>
+                                        <files>
+                                            <file>
+                                                <source>${project.build.directory}/${project.artifactId}-swarm.jar</source>
+                                            </file>
+                                        </files>
+                                    </inline>
+                                </assembly>
+                                <cmd>java -jar /maven/${project.artifactId}-swarm.jar</cmd>
+                            </build>
+                            <run>
+                                <ports>
+                                     Map container port 8080 to a dynamical port 
+                                    <port>8090:8090</port>
+                                </ports>
+                                <env>
+                                    <COUCHBASE_URI>${docker.host.address}</COUCHBASE_URI>
+                                </env>
+                                <wait>
+                                    <http>
+                                        <url>http://${docker.host.address}:${swarm.port}/webresources/airline</url>
+                                        <status>200</status>
+                                    </http>
+                                    <time>60000</time>
+                                </wait>
+                                <log>
+                                    <color>yellow</color>
+                                    <prefix>SWARM</prefix>
+                                </log>
+                            </run>
+                        </image>
+                    </images>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>docker:build</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>docker:start</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>start</goal>
+                            <goal>logs</goal>
+                        </goals>
+                    </execution>
+                </executions>                
+            </plugin>-->
         </plugins>
     </build>    
 </project>
