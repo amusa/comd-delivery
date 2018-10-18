@@ -165,15 +165,19 @@ public class JcoDeliveryService implements DeliveryService {
         }
 
         for (int i = 0; i < deliveryList.getNumRows(); i++, deliveryList.nextRow()) {
-            logger.log(Level.INFO, deliveryList.getString("VBELN") + '\t'
-                    + deliveryList.getString("KUNAG") + '\t'
-                    + deliveryList.getString("ZZVESSEL") + '\t'
-                    + deliveryList.getString("FKIMG") + '\t'
-                    + deliveryList.getString("NETWR") + '\t'
-                    + deliveryList.getString("FBUDA") + '\t'
-                    + deliveryList.getString("ARKTX"));
+            logger.log(Level.INFO, "{0}\t{1}", new Object[]{
+                deliveryList.getString("VGBEL"),
+                deliveryList.getString("VBELN"),
+                deliveryList.getString("KUNAG"),
+                deliveryList.getString("ZZVESSEL"),
+                deliveryList.getString("FKIMG"),
+                deliveryList.getString("NETWR"),
+                deliveryList.getString("FBUDA"),
+                deliveryList.getString("ARKTX")
+            });
 
             Delivery delivery = new Delivery();
+            delivery.setDeliveryNumber(deliveryList.getString("VGBEL"));
             delivery.setInvoiceNumber(deliveryList.getString("VBELN"));
             delivery.setCustomer(deliveryList.getString("KUNAG"));
             delivery.setVesselName(deliveryList.getString("ZZVESSEL"));
@@ -183,6 +187,7 @@ public class JcoDeliveryService implements DeliveryService {
             delivery.setUom(deliveryList.getString("VRKME"));
             delivery.setCrudeName(deliveryList.getString("ARKTX"));
             delivery.setUnitPrice(Double.parseDouble(deliveryList.getString("KBETR")));
+            delivery.setProducer(deliveryList.getString("PRODUCER"));
             try {
                 delivery.setBlDate(sdf.parse(deliveryList.getString("FBUDA")));
             } catch (ParseException ex) {

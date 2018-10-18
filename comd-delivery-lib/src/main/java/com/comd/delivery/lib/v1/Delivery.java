@@ -13,6 +13,7 @@ import java.util.Date;
  */
 public class Delivery {
 
+    private String deliveryNumber;
     private String orderReason;
     private String customer;
     private Date blDate;
@@ -31,6 +32,14 @@ public class Delivery {
     private String remark;
 
     public Delivery() {
+    }
+
+    public String getDeliveryNumber() {
+        return deliveryNumber;
+    }
+
+    public void setDeliveryNumber(String deliveryNumber) {
+        this.deliveryNumber = deliveryNumber;
     }
 
     public String getOrderReason() {
