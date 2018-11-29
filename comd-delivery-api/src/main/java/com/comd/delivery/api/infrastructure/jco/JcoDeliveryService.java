@@ -188,6 +188,7 @@ public class JcoDeliveryService implements DeliveryService {
             delivery.setCrudeName(deliveryList.getString("ARKTX"));
             delivery.setUnitPrice(Double.parseDouble(deliveryList.getString("KBETR")));
             delivery.setProducer(deliveryList.getString("PRODUCER"));
+            delivery.setInvoiceRef(deliveryList.getString("INV_REF"));
             try {
                 delivery.setBlDate(sdf.parse(deliveryList.getString("FBUDA")));
             } catch (ParseException ex) {

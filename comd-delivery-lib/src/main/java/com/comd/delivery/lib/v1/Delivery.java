@@ -22,6 +22,7 @@ public class Delivery {
     private String producer;
     private String vesselName;
     private String invoiceNumber;
+    private String invoiceRef;
     private String lcNum;
     private double quantity;
     private String uom;
@@ -98,6 +99,15 @@ public class Delivery {
         this.invoiceNumber = invoiceNumber;
     }
 
+    public String getInvoiceRef() {
+        return invoiceRef;
+    }
+
+    public void setInvoiceRef(String invoiceRef) {
+        this.invoiceRef = invoiceRef;
+    }
+    
+    
     public double getQuantity() {
         return quantity;
     }
