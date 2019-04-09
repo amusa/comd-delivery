@@ -22,7 +22,7 @@
         <javaee.version>7.0</javaee.version>
         <jwt.version>3.2.0</jwt.version>
         <jackson.version>2.8.10</jackson.version>
-        <h2.version>1.4.196</h2.version>
+        <h2.version>1.4.196</h2.version>        
     </properties>
     <dependencyManagement>    
         <dependencies>
@@ -39,7 +39,7 @@
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
-<!--            <dependency>
+            <!--            <dependency>
                 <groupId>org.apache.deltaspike.core</groupId>
                 <artifactId>deltaspike-core-api</artifactId>
                 <version>1.5.3</version>
@@ -55,7 +55,7 @@
                 <version>${payara-micro.version}</version>
                 <scope>provided</scope>
             </dependency>-->
-<!--            <dependency>
+            <!--            <dependency>
                 <groupId>com.auth0</groupId>
                 <artifactId>java-jwt</artifactId>
                 <version>${jwt.version}</version>
